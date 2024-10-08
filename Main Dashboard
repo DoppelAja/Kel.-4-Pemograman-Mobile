@@ -1,0 +1,208 @@
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, TextInput } from 'react-native';
+
+const DashboardScreen = () => {
+  return (
+    <ScrollView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Masukkan kata pencarian"
+        />
+        <View style={styles.notificationIcon}>
+          <Image source={{ uri: 'https://w7.pngwing.com/pngs/792/223/png-transparent-computer-icons-encapsulated-postscript-others-hat-silhouette-user-interface-thumbnail.png' }} style={styles.iconImage} />
+        </View>
+      </View>
+
+      {/* Welcome Message */}
+      <View style={styles.welcomeSection}>
+        <Text style={styles.greetingText}>Hi, <Text style={styles.nameText}>Fakhri</Text></Text>
+        <Text style={styles.subtitle}>Gimana proses skripsi mu?</Text>
+        <View style={styles.progressBarContainer}>
+          <View style={styles.progressBar}>
+            <View style={styles.progress}></View>
+          </View>
+          <Text style={styles.progressText}>55% Skripsi Telah Dikerjakan</Text>
+        </View>
+      </View>
+
+      {/* Menu Section */}
+      <View style={styles.menuSection}>
+        <TouchableOpacity style={styles.menuItem}>
+          <Image source={{ uri: 'https://img.icons8.com/ios-filled/50/000000/school' }} style={styles.menuIcon} />
+          <Text style={styles.menuText}>Bimbingan</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Image source={{ uri: 'https://img.icons8.com/ios-filled/50/000000/calendar' }} style={styles.menuIcon} />
+          <Text style={styles.menuText}>Janji Temu</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Image source={{ uri: 'https://img.icons8.com/?size=100&id=12629&format=png&color=000000' }} style={styles.menuIcon} />
+          <Text style={styles.menuText}>Review</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Review Section */}
+      <View style={styles.reviewSection}>
+        <View style={styles.reviewCard}>
+          <Text style={styles.reviewTitle}>Review masuk</Text>
+          <Text style={styles.reviewLecturer}>Dari Joko, S.Kom., M.T</Text>
+          <Text style={styles.reviewText}>
+            "udah bagus untuk bab I nya tapi perbaiki lagi kata
+            katanya menjadi baku dan bahasa Indonesia"
+          </Text>
+        </View>
+
+        <View style={styles.meetingCard}>
+          <Text style={styles.meetingTitle}>Ada Janji Temu nih</Text>
+          <Text style={styles.meetingLecturer}>Dengan Joko, S.Kom., M.T</Text>
+          <Text style={styles.meetingDate}>24 April 2024</Text>
+          <Text style={styles.meetingTime}>At 10:00 - 12:00 AM</Text>
+        </View>
+
+        <View style={styles.reviewCard}>
+          <Text style={styles.reviewTitle}>Review masuk</Text>
+          <Text style={styles.reviewLecturer}>Dari Joko, S.Kom., M.T</Text>
+          <Text style={styles.reviewText}>
+            "udah bagus untuk bab I nya tapi perbaiki lagi kata
+            katanya menjadi baku dan bahasa Indonesia"
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F4F6F9',
+    paddingHorizontal: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  searchBar: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    elevation: 3,
+    height: 40,
+  },
+  notificationIcon: {
+    marginLeft: 15,
+    padding: 10,
+  },
+  iconImage: {
+    width: 30,
+    height: 30,
+  },
+  welcomeSection: {
+    backgroundColor: '#3470A2',
+    padding: 20,
+    borderRadius: 15,
+    marginTop: 20,
+  },
+  greetingText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  nameText: {
+    color: '#FFC107',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#fff',
+    marginVertical: 10,
+  },
+  progressBarContainer: {
+    marginTop: 10,
+  },
+  progressBar: {
+    height: 10,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  progress: {
+    width: '55%',
+    height: '100%',
+    backgroundColor: '#FFC107',
+  },
+  progressText: {
+    marginTop: 5,
+    fontSize: 12,
+    color: '#fff',
+  },
+  menuSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+  },
+  menuItem: {
+    alignItems: 'center',
+  },
+  menuIcon: {
+    width: 40,
+    height: 40,
+  },
+  menuText: {
+    marginTop: 5,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  reviewSection: {
+    marginTop: 20,
+  },
+  reviewCard: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 15,
+    marginBottom: 10,
+    elevation: 3,
+  },
+  reviewTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  reviewLecturer: {
+    fontSize: 14,
+    color: '#555',
+  },
+  reviewText: {
+    fontSize: 14,
+    marginTop: 10,
+  },
+  meetingCard: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 15,
+    marginBottom: 10,
+    elevation: 3,
+  },
+  meetingTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  meetingLecturer: {
+    fontSize: 14,
+    color: '#555',
+  },
+  meetingDate: {
+    fontSize: 14,
+    marginTop: 10,
+  },
+  meetingTime: {
+    fontSize: 12,
+    color: '#999',
+  },
+});
+
+export default DashboardScreen;
