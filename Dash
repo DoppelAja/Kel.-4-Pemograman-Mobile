@@ -1,0 +1,309 @@
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, StyleSheet, TextInput, Text, View, TouchableOpacity, Image, Animated } from "react-native";
+
+const App = () => {
+  const [searchText, setSearchText] = useState("");
+  const [progress] = useState(new Animated.Value(0));
+
+  const handleNotificationPress = () => {
+    alert("Notifikasi ditekan!");
+  };
+
+  const handleReviewPress = () => {
+    alert("Review ditekan!");
+  };
+
+  useEffect(() => {
+    Animated.timing(progress, {
+      toValue: 0.55, // Set progress menjadi 55%
+      duration: 1000, // Durasi animasi dalam milidetik
+      useNativeDriver: false,
+    }).start();
+  }, []);
+
+  const progressInterpolation = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0%", "100%"],
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        {/* Search Bar */}
+        <TextInput
+          style={styles.input}
+          placeholder="Masukkan kata pencarian"
+          value={searchText}
+          onChangeText={(text) => setSearchText(text)}
+        />
+
+        {/* Icon Notifikasi */}
+        <TouchableOpacity onPress={handleNotificationPress}>
+          <Image
+            source={{
+              uri: "https://img.icons8.com/ios-filled/50/000000/appointment-reminders.png",
+            }}
+            style={styles.notificationIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Kartu progress */}
+      <View style={styles.cardContainer}>
+        <Text style={styles.greetingText}>
+          Hi, <Text style={styles.nameText}>Fakhri</Text>
+        </Text>
+        <Text style={styles.subText}>Gimana proses skripsi mu?</Text>
+
+        {/* Progress Bar dan Gambar dengan Border Bersama */}
+        <View style={styles.progressBarWrapper}>
+          <View style={styles.progressContainer}>
+            {/* Icon Skripsi */}
+            <Image
+              source={{
+                uri: "https://img.freepik.com/free-vector/computer-performance-boost-rocket-fast-data-transmission-power-measure-dial-with-pointer-scale-with-arrow-response-time-indicator-vector-isolated-concept-metaphor-illustration_335657-1993.jpg",
+              }}
+              style={styles.skripsiIcon}
+            />
+            <View style={styles.textWrapper}>
+              <Text style={styles.progressText}>55% Skripsi Telah Dikerjakan</Text>
+
+              {/* Progress Bar */}
+              <View style={styles.progressBarBackground}>
+                <Animated.View
+                  style={[styles.progressBar, { width: progressInterpolation }]}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* Tombol Bimbingan, Janji Temu, dan Review */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button}>
+          <View style={styles.buttonIcon}>
+            <Text style={styles.buttonIconText}>💬</Text>
+          </View>
+          <Text style={styles.buttonText}>Bimbingan</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button}>
+          <View style={styles.buttonIcon}>
+            <Text style={styles.buttonIconText}>🗓️➕</Text>
+          </View>
+          <Text style={styles.buttonText}>Janji Temu</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={handleReviewPress}>
+          <View style={styles.buttonIcon}>
+            <Text style={styles.buttonIconText}>📝➕</Text>
+          </View>
+          <Text style={styles.buttonText}>Review</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Bagian Review */}
+      <View style={styles.reviewContainer}>
+        <Text style={styles.reviewHeader}>Review Masuk</Text>
+        <Text style={styles.reviewText}>Dari Joko, S.Kom., M.T.</Text>
+        <Text style={styles.reviewMessage}>
+          Anda memiliki 3 notifikasi baru! Bimbingan Anda dijadwalkan besok. Janji temu dengan dosen telah dikonfirmasi. Tugas baru telah ditambahkan.
+        </Text>
+      </View>
+
+      {/* Navbar dengan Gambar di bawah */}
+      <View style={styles.navbar}>
+        <TouchableOpacity style={styles.navButton}>
+          <Image source={{ uri: "https://img.icons8.com/ios-filled/50/000000/home.png" }} style={styles.navIcon} />
+          <Text style={styles.navButtonText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Image source={{ uri: "https://img.icons8.com/ios-filled/50/000000/more.png" }} style={styles.navIcon} />
+          <Text style={styles.navButtonText}>Lainnya</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Image source={{ uri: "https://img.icons8.com/ios-filled/50/000000/university.png" }} style={styles.navIcon} />
+          <Text style={styles.navButtonText}>Akademik</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+        <Image source={{ uri: "https://img.icons8.com/ios-filled/50/000000/message.png" }} style={styles.navIcon} />
+          <Text style={styles.navButtonText}>Pesan</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Image source={{ uri: "https://img.icons8.com/ios-filled/50/000000/user.png" }} style={styles.navIcon} />
+          <Text style={styles.navButtonText}>Akun</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    backgroundColor: "#E0F7FA",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 30,
+    paddingHorizontal: 10,
+    marginRight: 10,
+  },
+  notificationIcon: {
+    width: 30,
+    height: 30,
+  },
+  cardContainer: {
+    backgroundColor: "#1E88E5",
+    borderRadius: 25,
+    padding: 20,
+    marginTop: 20,
+    elevation: 5,
+  },
+  greetingText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  nameText: {
+    color: "#FFC107",
+  },
+  subText: {
+    color: "#E0F7FA",
+    marginBottom: 20,
+  },
+  progressBarWrapper: {
+    borderWidth: 2,
+    borderColor: "#FFC107",
+    borderRadius: 30,
+    padding: 10,
+  },
+  progressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  skripsiIcon: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: "#fff",
+    borderRadius: 50,
+  },
+  textWrapper: {
+    flex: 1,
+  },
+  progressText: {
+    color: "#fff",
+    marginBottom: 5,
+  },
+  progressBarBackground: {
+    height: 10,
+    backgroundColor: "#E0E0E0",
+    borderRadius: 5,
+    overflow: "hidden",
+  },
+  progressBar: {
+    height: 10,
+    backgroundColor: "#FBC02D",
+    borderRadius: 5,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+  },
+  button: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+    borderRadius: 10,
+    backgroundColor: "#87CEEB",
+    marginHorizontal: 8,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  buttonIcon: {
+    width: 24,
+    height: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    borderColor: "#87CEEB",
+    borderWidth: 1,
+    marginBottom: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
+  buttonIconText: {
+    fontSize: 24,
+  },
+  reviewContainer: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 10,
+  },
+  reviewHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  reviewText: {
+    fontSize: 16,
+  },
+  reviewMessage: {
+    fontSize: 14,
+    color: "#757575",
+  },
+  navbar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#1E88E5",
+    paddingVertical: 10,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+  },
+  navButton: {
+    flex: 1,
+    alignItems: "center",
+  },
+  navIcon: {
+    width: 30,
+    height: 30,
+    marginBottom: 5,
+  },
+  navButtonText: {
+    fontSize: 12,
+    color: "#fff",
+  },
+});
+
+export default App;
