@@ -48,6 +48,8 @@ const DashboardScreen = () => {
         <View style={styles.reviewCard}>
           <Text style={styles.reviewTitle}>Review masuk</Text>
           <Text style={styles.reviewLecturer}>Dari Joko, S.Kom., M.T</Text>
+        </View>
+        <View style={styles.reviewCard1}>
           <Text style={styles.reviewText}>
             "udah bagus untuk bab I nya tapi perbaiki lagi kata
             katanya menjadi baku dan bahasa Indonesia"
@@ -57,6 +59,8 @@ const DashboardScreen = () => {
         <View style={styles.meetingCard}>
           <Text style={styles.meetingTitle}>Ada Janji Temu nih</Text>
           <Text style={styles.meetingLecturer}>Dengan Joko, S.Kom., M.T</Text>
+        </View>
+        <View style={styles.meetingCard1}>
           <Text style={styles.meetingDate}>24 April 2024</Text>
           <Text style={styles.meetingTime}>At 10:00 - 12:00 AM</Text>
         </View>
@@ -64,6 +68,8 @@ const DashboardScreen = () => {
         <View style={styles.reviewCard}>
           <Text style={styles.reviewTitle}>Review masuk</Text>
           <Text style={styles.reviewLecturer}>Dari Joko, S.Kom., M.T</Text>
+        </View>
+        <View style={styles.reviewCard1}>
           <Text style={styles.reviewText}>
             "udah bagus untuk bab I nya tapi perbaiki lagi kata
             katanya menjadi baku dan bahasa Indonesia"
@@ -107,10 +113,12 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
     marginTop: 20,
+    elevation: 3,
   },
   greetingText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#fff',
   },
   nameText: {
     color: '#FFC107',
@@ -160,40 +168,60 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   reviewCard: {
+    padding: 10,
+    elevation: 3,
+    marginTop: 20, // Jarak atas dari menu
+    backgroundColor: "#3470A2",
+    borderTopLeftRadius: 15, // Hanya kiri atas
+    borderTopRightRadius: 15, // Hanya kanan atas
+  },
+  reviewCard1: {
     backgroundColor: '#fff',
     padding: 15,
-    borderRadius: 15,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     marginBottom: 10,
-    elevation: 3,
+    elevation: 5,
   },
   reviewTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#fff'
   },
   reviewLecturer: {
     fontSize: 14,
-    color: '#555',
+    color: '#fff',
   },
   reviewText: {
     fontSize: 14,
     marginTop: 10,
   },
   meetingCard: {
+    padding: 10,
+    elevation: 5,
+    marginTop: 20, // Jarak atas dari menu
+    backgroundColor: "#3470A2",
+    borderTopLeftRadius: 15, // Hanya kiri atas
+    borderTopRightRadius: 15, // Hanya kanan atas
+  },
+  meetingCard1: {
     backgroundColor: '#fff',
     padding: 15,
-    borderRadius: 15,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     marginBottom: 10,
-    elevation: 3,
+    elevation: 5,
   },
   meetingTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#fff',
   },
   meetingLecturer: {
     fontSize: 14,
-    color: '#555',
+    color: '#fff',
   },
   meetingDate: {
     fontSize: 14,
