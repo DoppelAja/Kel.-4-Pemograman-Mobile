@@ -11,12 +11,13 @@ const App = () => {
       <Text style={styles.title}>Bimbingan TA</Text>
       <Text style={styles.subtitle}>Masuk sebagai?</Text>
 
+      
       <TouchableOpacity style={styles.buttonMhs}>
-        <Text style={styles.buttonText}>Mahasiswa</Text>
+        <Text style={styles.buttonTextMhs}>Mahasiswa</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.buttonDsn}>
-        <Text style={styles.buttonText}>Dosen</Text>
+        <Text style={styles.buttonTextDsn}>Dosen</Text>
       </TouchableOpacity>
     </View>
   );
@@ -56,16 +57,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonDsn: {
-    backgroundColor: '#3470A2',
+    // backgroundColor: '#3470A2',
+    borderColor: '#3470A2',
+    borderWidth: 2,
     padding: 20,
     paddingHorizontal: 115,
     borderRadius: 10,
     marginBottom: 20,
   },
-  buttonText: {
+  buttonTextMhs: {
     fontSize: 16,
     fontWeight: '600',
     color: '#fff',
+  },
+  buttonTextDsn: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#3470A2',
   },
 });
 
