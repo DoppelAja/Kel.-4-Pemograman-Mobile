@@ -19,7 +19,7 @@ const App = () => {
         <TextInput style={styles.input} placeholder="Masukkan kata pencarian" value={searchText} onChangeText={(text) => setSearchText(text)} />
         <TouchableOpacity onPress={handleNotificationPress}>
           <Image
-            source={{ uri: "https://img.icons8.com/ios-filled/50/000000/appointment-reminders.png" }}
+            source={require( "./assets/notif.png" )}
             style={styles.notificationIcon}
           />
         </TouchableOpacity>
@@ -34,7 +34,7 @@ const App = () => {
         <View style={styles.progressBarWrapper}>
           <View style={styles.progressContainer}>
             <Image
-              source={{ uri: "https://img.freepik.com/free-vector/computer-performance-boost-rocket-fast-data-transmission-power-measure-dial-with-pointer-scale-with-arrow-response-time-indicator-vector-isolated-concept-metaphor-illustration_335657-1993.jpg?t=st=1728379507~exp=1728383107~hmac=21897e52005015dad0bf919a7893a015fec7d804d662a7b05f1d3be89b160595&w=740" }}
+              source={require( "./assets/fotoprofil.png" )}
               style={styles.skripsiIcon}
             />
             <View style={styles.textWrapper}>
@@ -130,17 +130,20 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 10,
     marginRight: 10,
+    marginTop: 30,
   },
   notificationIcon: {
     width: 30,
     height: 30,
+    marginTop: 30,
   },
   cardContainer: {
     backgroundColor: "#4682B4",
     borderRadius: 25,
     padding: 20,
-    marginTop: 20,
+    marginTop: 10,
     elevation: 5,
+
   },
   greetingText: {
     fontSize: 50,
@@ -156,7 +159,7 @@ const styles = StyleSheet.create({
   },
   progressBarWrapper: {
     borderWidth: 2,
-    borderColor: "#FFFFFF",
+    borderColor: "#4682B4",
     borderRadius: 30,
     padding: 8,
     backgroundColor: "rgba(255, 255, 255, 0.6)",
