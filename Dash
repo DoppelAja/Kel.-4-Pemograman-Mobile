@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StyleSheet, TextInput, Text, View, TouchableOpacity, Image, Animated } from "react-native";
+import { 
+  SafeAreaView, 
+  StyleSheet, 
+  TextInput, 
+  Text, 
+  View, 
+  TouchableOpacity, 
+  Image, 
+  Animated, 
+  ScrollView,
+  StatusBar
+} from "react-native";
 
 const App = () => {
   const [searchText, setSearchText] = useState("");
@@ -24,134 +35,149 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerSection}>
-        <View style={styles.headerContainer}>
-          <View style={styles.searchContainer}>
-            <Image
-              source={{ uri: "https://img.icons8.com/ios-filled/50/ffffff/search.png" }}
-              style={styles.searchIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Cari sesuatu..."
-              placeholderTextColor="#E1F5FE"
-              value={searchText}
-              onChangeText={(text) => setSearchText(text)}
-            />
+      <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.headerSection}>
+          <View style={styles.headerContainer}>
+            <View style={styles.searchContainer}>
+              <Image
+                source={{ uri: "https://img.icons8.com/ios-filled/50/ffffff/search.png" }}
+                style={styles.searchIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Cari sesuatu..."
+                placeholderTextColor="#E1F5FE"
+                value={searchText}
+                onChangeText={(text) => setSearchText(text)}
+              />
+            </View>
+
+            <TouchableOpacity 
+              style={styles.notificationButton}
+              onPress={handleNotificationPress}
+            >
+              <Image
+                source={{ uri: "https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png" }}
+                style={styles.notificationIcon}
+              />
+              <View style={styles.notificationBadge}>
+                <Text style={styles.badgeText}>3</Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
-          <TouchableOpacity 
-            style={styles.notificationButton}
-            onPress={handleNotificationPress}
-          >
-            <Image
-              source={{ uri: "https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png" }}
-              style={styles.notificationIcon}
-            />
-            <View style={styles.notificationBadge}>
-              <Text style={styles.badgeText}>3</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.cardContainer}>
+            <Text style={styles.greetingText}>
+              Hi, <Text style={styles.nameText}>Fakhri</Text> 👋
+            </Text>
+            <Text style={styles.subText}>Gimana proses skripsi mu?</Text>
 
-        <View style={styles.cardContainer}>
-          <Text style={styles.greetingText}>
-            Hi, <Text style={styles.nameText}>Fakhri</Text> 👋
-          </Text>
-          <Text style={styles.subText}>Gimana proses skripsi mu?</Text>
-
-          <View style={styles.progressBarWrapper}>
-            <View style={styles.progressContainer}>
-              <Image
-                source={{
-                  uri: "https://img.freepik.com/free-vector/computer-performance-boost-rocket-fast-data-transmission-power-measure-dial-with-pointer-scale-with-arrow-response-time-indicator-vector-isolated-concept-metaphor-illustration_335657-1993.jpg",
-                }}
-                style={styles.skripsiIcon}
-              />
-              <View style={styles.textWrapper}>
-                <Text style={styles.progressText}>55% Skripsi Telah Dikerjakan</Text>
-                <View style={styles.progressBarBackground}>
-                  <Animated.View
-                    style={[styles.progressBar, { width: progressInterpolation }]}
-                  />
+            <View style={styles.progressBarWrapper}>
+              <View style={styles.progressContainer}>
+                <Image
+                  source={{
+                    uri: "https://img.freepik.com/free-vector/computer-performance-boost-rocket-fast-data-transmission-power-measure-dial-with-pointer-scale-with-arrow-response-time-indicator-vector-isolated-concept-metaphor-illustration_335657-1993.jpg",
+                  }}
+                  style={styles.skripsiIcon}
+                />
+                <View style={styles.textWrapper}>
+                  <Text style={styles.progressText}>55% Skripsi Telah Dikerjakan</Text>
+                  <View style={styles.progressBarBackground}>
+                    <Animated.View
+                      style={[styles.progressBar, { width: progressInterpolation }]}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.buttonContainer}>
-          {[
-            { icon: "💬", text: "Bimbingan", color: "#FF7043", shadowColor: "#FFE0B2" },
-            { icon: "🗓️", text: "Janji Temu", color: "#66BB6A", shadowColor: "#C8E6C9" },
-            { icon: "📝", text: "Review", color: "#42A5F5", shadowColor: "#BBDEFB" }
-          ].map((item, index) => (
-            <TouchableOpacity 
-              key={index}
-              style={[styles.button, { 
-                backgroundColor: item.color,
-                shadowColor: item.shadowColor 
-              }]}
-            >
-              <View style={styles.buttonIcon}>
-                <Text style={styles.buttonIconText}>{item.icon}</Text>
-              </View>
-              <Text style={styles.buttonText}>{item.text}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <View style={styles.reviewItemContainer}>
-          <View style={styles.reviewHeader}>
-            <Text style={styles.reviewHeaderText}>Review Masuk</Text>
-            <TouchableOpacity style={styles.viewAllButton}>
-              <Text style={styles.viewAllText}>Lihat Semua</Text>
-            </TouchableOpacity>
+        <View style={styles.mainContent}>
+          <View style={styles.buttonContainer}>
+            {[
+              { icon: "💬", text: "Bimbingan", color: "#FF7043", shadowColor: "#FFE0B2" },
+              { icon: "🗓️", text: "Janji Temu", color: "#66BB6A", shadowColor: "#C8E6C9" },
+              { icon: "📝", text: "Review", color: "#42A5F5", shadowColor: "#BBDEFB" }
+            ].map((item, index) => (
+              <TouchableOpacity 
+                key={index}
+                style={[styles.button, { 
+                  backgroundColor: item.color,
+                  shadowColor: item.shadowColor 
+                }]}
+              >
+                <View style={styles.buttonIcon}>
+                  <Text style={styles.buttonIconText}>{item.icon}</Text>
+                </View>
+                <Text style={styles.buttonText}>{item.text}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-          
-          {[
-            {
-              name: "Joko, S.Kom., M.T.",
-              message: "Anda memiliki 3 notifikasi baru! Bimbingan Anda dijadwalkan besok.",
-              time: "2 jam yang lalu",
-              image: "user-male-circle"
-            },
-            {
-              name: "Dr. Sarah, M.Kom.",
-              message: "Revisi bab 3 sudah saya review. Ada beberapa catatan penting yang perlu diperhatikan untuk metodologi penelitian.",
-              time: "5 jam yang lalu",
-              image: "user-female-circle"
-            },
-            {
-              name: "Prof. Ahmad, Ph.D.",
-              message: "Metodologi penelitian perlu diperdalam. Jadwalkan bimbingan untuk minggu depan.",
-              time: "1 hari yang lalu",
-              image: "user-male-circle"
-            },
-            {
-              name: "Dr. Budi, M.Sc.",
-              message: "Draft presentasi sudah bagus. Siapkan untuk seminar proposal minggu depan.",
-              time: "2 hari yang lalu",
-              image: "user-male-circle"
-            }
-          ].map((review, index) => (
-            <View key={index} style={[
-              styles.reviewItem,
-              index > 0 && styles.reviewItemBorder
-            ]}>
-              <Image
-                source={{ uri: `https://img.icons8.com/ios-filled/50/000000/${review.image}.png` }}
-                style={styles.reviewerImage}
-              />
-              <View style={styles.reviewContent}>
-                <Text style={styles.reviewerName}>{review.name}</Text>
-                <Text style={styles.reviewMessage}>{review.message}</Text>
-                <Text style={styles.reviewTime}>{review.time}</Text>
-              </View>
+
+          <View style={styles.reviewItemContainer}>
+            <View style={styles.reviewHeader}>
+              <Text style={styles.reviewHeaderText}>Review Masuk</Text>
+              <TouchableOpacity style={styles.viewAllButton}>
+                <Text style={styles.viewAllText}>Lihat Semua</Text>
+              </TouchableOpacity>
             </View>
-          ))}
+
+            {[
+              {
+                name: "Joko, S.Kom., M.T.",
+                message: "Anda memiliki 3 notifikasi baru! Bimbingan Anda dijadwalkan besok.",
+                time: "2 jam yang lalu",
+                image: "user-male-circle",
+                priority: "high"
+              },
+              {
+                name: "Dr. Sarah, M.Kom.",
+                message: "Revisi bab 3 sudah saya review. Ada beberapa catatan penting yang perlu diperhatikan untuk metodologi penelitian.",
+                time: "5 jam yang lalu",
+                image: "user-female-circle",
+                priority: "medium"
+              },
+              {
+                name: "Prof. Ahmad, Ph.D.",
+                message: "Metodologi penelitian perlu diperdalam. Jadwalkan bimbingan untuk minggu depan.",
+                time: "1 hari yang lalu",
+                image: "user-male-circle",
+                priority: "low"
+              },
+              {
+                name: "Dr. Budi, M.Sc.",
+                message: "Draft presentasi sudah bagus. Siapkan untuk seminar proposal minggu depan.",
+                time: "2 hari yang lalu",
+                image: "user-male-circle",
+                priority: "low"
+              }
+            ].map((review, index) => (
+              <TouchableOpacity 
+                key={index} 
+                style={[
+                  styles.reviewItem,
+                  index > 0 && styles.reviewItemBorder
+                ]}
+              >
+                <Image
+                  source={{ uri: `https://img.icons8.com/ios-filled/50/000000/${review.image}.png` }}
+                  style={styles.reviewerImage}
+                />
+                <View style={[
+                  styles.reviewContent,
+                  styles[`priority${review.priority.charAt(0).toUpperCase() + review.priority.slice(1)}`]
+                ]}>
+                  <Text style={styles.reviewerName}>{review.name}</Text>
+                  <Text style={styles.reviewMessage}>{review.message}</Text>
+                  <Text style={styles.reviewTime}>{review.time}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
+      </ScrollView>
 
       <View style={styles.navbarContainer}>
         <View style={styles.navbar}>
@@ -186,10 +212,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5F5F5",
   },
+  scrollView: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+    marginBottom: 60,
+  },
   headerSection: {
     backgroundColor: "#2196F3",
     padding: 20,
-    paddingBottom: 40,
+    paddingTop: 40,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    elevation: 5,
   },
   headerContainer: {
     flexDirection: "row",
@@ -216,12 +250,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     color: "#fff",
+    fontSize: 16,
   },
   notificationButton: {
     position: "relative",
     padding: 8,
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 20,
+    elevation: 2,
   },
   notificationIcon: {
     width: 24,
@@ -238,6 +274,8 @@ const styles = StyleSheet.create({
     height: 20,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
   },
   badgeText: {
     color: "#fff",
@@ -248,23 +286,27 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   greetingText: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
     color: "#fff",
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 5,
   },
   nameText: {
     color: "#FFC107",
+    fontWeight: "900",
   },
   subText: {
     color: "#E1F5FE",
-    fontSize: 16,
+    fontSize: 18,
     marginTop: 5,
     marginBottom: 20,
   },
-  progressBarWrapper: {
+   progressBarWrapper: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 20,
-    padding: 15,
+    padding: 7,
   },
   progressContainer: {
     flexDirection: "row",
@@ -281,7 +323,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "600",
     marginBottom: 8,
   },
@@ -296,42 +338,45 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFC107",
     borderRadius: 4,
   },
+  mainContent: {
+    padding: 20,
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 20,
-    marginTop: -30,
-    paddingBottom: 10,
+    marginTop: -10,
+    marginBottom: 10,
   },
   button: {
     flex: 1,
     alignItems: "center",
-    padding: 12,
-    borderRadius: 12,
-    marginHorizontal: 4,
-    elevation: 4,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    padding: 15,
+    borderRadius: 15,
+    marginHorizontal:5,
+    elevation: 5,
   },
   buttonIcon: {
-    width: 35,
-    height: 35,
+    width: 40,
+    height: 40,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 17.5,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 6,
+    marginBottom: 8,
   },
   buttonIconText: {
-    fontSize: 18,
+    fontSize: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 11.5,
   },
   reviewItemContainer: {
-    margin: 20,
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 15,
-    elevation: 2,
+    padding: 20,
+    elevation: 4,
     borderWidth: 1,
     borderColor: "#E3F2FD",
   },
@@ -344,6 +389,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#E3F2FD",
   },
+  reviewHeaderText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1976D2",
+  },
+  viewAllButton: {
+    backgroundColor: "#E3F2FD",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 15,
+  },
+  viewAllText: {
+    color: "#2196F3",
+    fontWeight: "600",
+  },
   reviewItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -354,18 +414,34 @@ const styles = StyleSheet.create({
     borderTopColor: "#E3F2FD",
     marginTop: 5,
   },
+  reviewerImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: "#E3F2FD",
+  },
   reviewContent: {
     flex: 1,
     backgroundColor: "#F5F9FF",
-    padding: 10,
-    borderRadius: 10,
-    marginLeft: 10,
-    borderLeftWidth: 3,
-    borderLeftColor: "#2196F3",
+    padding: 12,
+    borderRadius: 12,
+    marginLeft: 5,
+    borderLeftWidth: 4,
+  },
+  priorityHigh: {
+    borderLeftColor: "#FF5252",
+  },
+  priorityMedium: {
+    borderLeftColor: "#FFC107",
+  },
+  priorityLow: {
+    borderLeftColor: "#4CAF50",
   },
   reviewerName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
     color: "#1976D2",
     marginBottom: 5,
   },
@@ -386,23 +462,27 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#fff',
-    elevation: 10,
+    elevation: 8,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: '#E3F2FD',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   navbar: {
     flexDirection: "row",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    justifyContent: "space-around",
+    paddingVertical: -20,
+    paddingHorizontal: -10,
   },
   navButton: {
     flex: 1,
     alignItems: "center",
+    paddingVertical: 8,
+    marginHorizontal: 5,
+    borderRadius: 12,
   },
   navButtonActive: {
     backgroundColor: "#E3F2FD",
-    borderRadius: 10,
-    padding: 5,
   },
   navIcon: {
     width: 24,
