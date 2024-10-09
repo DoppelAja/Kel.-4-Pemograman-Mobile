@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from "react-native";
+import { Button, View, ImageBackground, Text, StyleSheet, TextInput, Image, TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -14,7 +14,7 @@ const HalamanAwal = ({ navigation }) => {
       <Text style={styles.title}>Bimbingan TA</Text>
       <Text style={styles.subtitle}>Masuk sebagai?</Text>
 
-      <TouchableOpacity style={styles.buttonMhs} onPress={() => navigation.navigate("Mahasiswa")}>
+      <TouchableOpacity style={styles.buttonMhs} onPress={() => navigation.navigate("Dashboard Mahasiswa")}>
         <Text style={styles.buttonTextMhs}>Mahasiswa</Text>
       </TouchableOpacity>
 
@@ -29,7 +29,6 @@ const HalamanAwal = ({ navigation }) => {
 const HalamanMhs = () => {
   return (
     <View style={styles.container2}>
-      {/* Search Bar dan Ikon Notifikasi */}
       <View style={styles.headerContainer}>
         <TextInput style={styles.input} placeholder="Masukkan kata pencarian" placeholderTextColor="#c4c4c4" />
         <Image
@@ -56,7 +55,7 @@ const HalamanMhs = () => {
 
       {/* Menu Bimbingan, Janji Temu, Review */}
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Bimbingan")}>
           <Image
             source={{ uri: "https://img.icons8.com/ios-filled/50/000000/classroom.png" }} // Ikon Bimbingan
             style={styles.menuIcon}
@@ -151,7 +150,21 @@ const HalamanMhs = () => {
 };
 
 // Detail Screen
-const DetailsScreen = ({ navigation }) => {
+const DetailsScreen = ({}) => {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Details Screen</Text>
+      <Button title="Go to Details... again" onPress={() => navigation.push("Details")} />
+      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Button title="Go back to first screen in stack" onPress={() => navigation.popToTop()} />
+    </View>
+  );
+};
+
+
+// Detail Screen
+const HalamanBimbingan = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Details Screen</Text>
@@ -170,9 +183,10 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HalamanAwal">
-        <Stack.Screen name="HalamanAwal" component={HalamanAwal} />
-        <Stack.Screen name="Mahasiswa" component={HalamanMhs} />
+        <Stack.Screen name="SIKRISPI" component={HalamanAwal} />
+        <Stack.Screen name="Dashboard Mahasiswa" component={HalamanMhs} />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="Bimbingan" component={HalamanBimbingan} />
       </Stack.Navigator>
     </NavigationContainer>
   );
