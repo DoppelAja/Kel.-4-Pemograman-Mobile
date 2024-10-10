@@ -9,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import DashboardAwal from './DashboardAwal';
 import DashboardMhs from './DashboardMhs';
+import BimbinganMhs from './BimbinganMhs';
 
 
 const Stack = createStackNavigator(); //Deklarasi Stack Navigator
@@ -25,6 +26,10 @@ class App extends Component {
           <Stack.Screen
             name="Mahasiswa"
             component={DashboardMhs}
+          />
+          <Stack.Screen
+            name="Bimbingan"
+            component={BimbinganMhs}
           />
         </Stack.Navigator>
       </NavigationContainer>
