@@ -2,14 +2,15 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, TextInput, Text, View, TouchableOpacity, Image } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const DashboardMhs = () => {
-  const [searchText, setSearchText] = useState("");
 
+  const [searchText, setSearchText] = useState("");
+  const navigation = useNavigation();
   const handleNotificationPress = () => {
     alert("Notifikasi ditekan!");
   };
-
   const handleMenuPress = (menu) => {
     alert(`${menu} ditekan!`);
   };
@@ -48,7 +49,7 @@ const DashboardMhs = () => {
 
       {/* Menu Bimbingan, Janji Temu, dan Review dalam Bentuk Gambar */}
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('Bimbingan')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan')}>
           <View style={styles.iconBorder}>
             <Image
               source={require('./assets/bimbingan.png')} // Ganti dengan path gambar Bimbingan
@@ -58,7 +59,7 @@ const DashboardMhs = () => {
           <Text style={styles.menuText}>Bimbingan</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('Janji Temu')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan')}>
           <View style={styles.iconBorder}>
             <Image
               source={require('./assets/janjitemu.png')} // Ganti dengan path gambar Janji Temu
@@ -68,7 +69,7 @@ const DashboardMhs = () => {
           <Text style={styles.menuText}>Janji Temu</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => handleMenuPress('Review')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan')}>
           <View style={styles.iconBorder}>
             <Image
               source={require('./assets/review.png')} // Ganti dengan path gambar Review
