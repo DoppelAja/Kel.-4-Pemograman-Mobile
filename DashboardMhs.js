@@ -11,9 +11,6 @@ const DashboardMhs = () => {
   const handleNotificationPress = () => {
     alert("Notifikasi ditekan!");
   };
-  const handleMenuPress = (menu) => {
-    alert(`${menu} ditekan!`);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,7 +46,7 @@ const DashboardMhs = () => {
 
       {/* Menu Bimbingan, Janji Temu, dan Review dalam Bentuk Gambar */}
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan Mahasiswa')}>
           <View style={styles.iconBorder}>
             <Image
               source={require('./assets/bimbingan.png')} // Ganti dengan path gambar Bimbingan
@@ -59,7 +56,7 @@ const DashboardMhs = () => {
           <Text style={styles.menuText}>Bimbingan</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan Mahasiswa')}>
           <View style={styles.iconBorder}>
             <Image
               source={require('./assets/janjitemu.png')} // Ganti dengan path gambar Janji Temu
@@ -69,7 +66,7 @@ const DashboardMhs = () => {
           <Text style={styles.menuText}>Janji Temu</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Bimbingan Mahasiswa')}>
           <View style={styles.iconBorder}>
             <Image
               source={require('./assets/review.png')} // Ganti dengan path gambar Review

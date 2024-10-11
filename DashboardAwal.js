@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#3470A2',
-    marginTop: 10,
+    marginTop: 10 ,
     marginBottom: 15,
   },
   buttonMhs: {
