@@ -1,6 +1,6 @@
 // DashboardMahasiswa
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, TextInput, Text, View, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, TextInput, Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,15 +8,15 @@ const DashboardMhs = () => {
 
   const [searchText, setSearchText] = useState("");
   const navigation = useNavigation();
-  const handleNotificationPress = () => {
-    alert("Notifikasi ditekan!");
-  };
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('./assets/BackBimbingan.png')} resizeMode="cover" style={styles.BackPage}>
       <View style={styles.headerContainer}>
+
         <TextInput style={styles.input} placeholder="Masukkan kata pencarian" value={searchText} onChangeText={(text) => setSearchText(text)} />
-        <TouchableOpacity onPress={handleNotificationPress}>
+        
+        <TouchableOpacity onPress={() => navigation.navigate('Notifikasi Mahasiswa')}>
           <Image
             source={require("./assets/notif.png")}
             style={styles.notificationIcon}
@@ -76,6 +76,7 @@ const DashboardMhs = () => {
           <Text style={styles.menuText}>Review</Text>
         </TouchableOpacity>
       </View>
+
       {/* Review Section */}
       <View style={styles.notificationContainerTitle}>
         <Text style={styles.notificationTitle}>Review Masuk</Text>
@@ -102,7 +103,7 @@ const DashboardMhs = () => {
           <Text style={styles.notificationText}>Jadwal seminar telah diperbarui.</Text>
         </View>
       </View>
-
+      </ImageBackground>
     </SafeAreaView>
   );
 };
@@ -111,15 +112,17 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: "flex-start",
-      paddingHorizontal: 20,
-      paddingTop: 10,
+      // paddingHorizontal: 20,
       backgroundColor: "#FFFFFF",
     },
+    BackPage: {
+      flex: 1,
+    },
     headerContainer: {
+      paddingHorizontal: 20,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      marginVertical: 10,
     },
     input: {
       flex: 1,
@@ -137,6 +140,7 @@ const styles = StyleSheet.create({
       marginTop: 30,
     },
     cardContainer: {
+      marginHorizontal: 20,
       backgroundColor: "#4682B4",
       borderRadius: 25,
       padding: 20,
@@ -212,6 +216,7 @@ const styles = StyleSheet.create({
     },
     notificationContainerTitle: {
       // Gaya untuk title notifikasi
+      marginHorizontal: 20,
       backgroundColor: '#4682B4', // Contoh warna latar belakang
       padding: 10,
       borderTopLeftRadius: 25,
@@ -229,6 +234,7 @@ const styles = StyleSheet.create({
     },
     notificationContainer: {
       // Gaya untuk container notifikasi
+      marginHorizontal: 20,
       backgroundColor: '#f8f8f8', // Contoh warna latar belakang
       borderRadius: 15,
       padding: 10,
