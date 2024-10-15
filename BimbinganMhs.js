@@ -31,7 +31,7 @@ const ProfileCard = () => {
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Janji Temu')}>
           <Text style={styles.buttonText}>Janji Temu</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Bimbingan Mahasiswa')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Review Mahasiswa')}>
           <Text style={styles.buttonText}>Review</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Riwayat Mahasiswa')}>
