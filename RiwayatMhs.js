@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native'; 
 
@@ -78,7 +78,7 @@ const RiwayatMhs = () => {
 
   return (
     <View style={styles.container}>
-
+      <ImageBackground source={require('./assets/BackBimbingan.png')} resizeMode="cover" style={styles.BackPage}>
       {/* Riwayat & Filter */}
       <View style={styles.filterContainer}>
         <Text style={styles.riwayatText}>Riwayat</Text>
@@ -138,6 +138,7 @@ const RiwayatMhs = () => {
           </View>
         )}
       />
+      </ImageBackground>
     </View>
   );
 };
@@ -145,8 +146,11 @@ const RiwayatMhs = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    // padding: 16,
     backgroundColor: '#fff',
+  },
+  BackPage: {
+    flex: 1,
   },
   filterContainer: {
     flexDirection: 'row',
