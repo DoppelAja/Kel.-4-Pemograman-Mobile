@@ -12,6 +12,8 @@ import DashboardMhs from './DashboardMhs';
 import BimbinganMhs from './BimbinganMhs';
 import JanjiTemuMhs from './JanjiTemuMhs';
 import RiwayatMhs from './RiwayatMhs';
+import NotifikasiMhs from './NotifikasiMhs';
+import ReviewMhs from './ReviewMhs';
 
 const Stack = createStackNavigator(); //Deklarasi Stack Navigator
 
@@ -25,6 +27,10 @@ class App extends Component {
             component={DashboardAwal}
           /> 
           <Stack.Screen
+            name="Notifikasi Mahasiswa"
+            component={NotifikasiMhs}
+          />
+          <Stack.Screen
             name="Mahasiswa"
             component={DashboardMhs}
           />
@@ -36,6 +42,10 @@ class App extends Component {
             name="Janji Temu"
             component={JanjiTemuMhs}
           /> 
+          <Stack.Screen
+            name='Review Mahasiswa'
+            component={ReviewMhs}
+          />
           <Stack.Screen
             name="Riwayat Mahasiswa"
             component={RiwayatMhs}
