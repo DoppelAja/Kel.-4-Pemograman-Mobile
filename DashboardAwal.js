@@ -1,6 +1,6 @@
 //DashboardAwal
 import React, { Component } from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 
 class DashboardAwal extends Component {
   render() {
