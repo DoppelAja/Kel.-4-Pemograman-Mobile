@@ -5,7 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 const ReviewMhs = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedReviewer, setSelectedReviewer] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState("");
   const [description, setDescription] = useState("");
 
   const reviews = [
@@ -36,7 +36,7 @@ const ReviewMhs = () => {
   const closeModal = () => {
     setModalVisible(false);
     setSelectedReviewer("");
-    setFile(null);
+    setFile("");
     setDescription("");
   };
 
@@ -86,8 +86,13 @@ const ReviewMhs = () => {
               </Picker>
             </View>
 
-            <Text style={styles.modalLabel}>Pilih File</Text>
-            <TextInput style={styles.textInput} placeholder="Nama file (tap untuk memilih)" value={file} onChangeText={setFile} editable={false} />
+            <Text style={styles.modalLabel}>Nama File</Text>
+            <TextInput 
+              style={styles.textInput} 
+              placeholder="Masukkan nama file" 
+              value={file} 
+              onChangeText={setFile}
+            />
 
             <Text style={styles.modalLabel}>Deskripsi Review</Text>
             <TextInput style={styles.textInput} placeholder="Ketikkan Deskripsi Anda" value={description} onChangeText={setDescription} multiline />
@@ -258,17 +263,6 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: "100%",
-  },
-  fileButton: {
-    backgroundColor: "#63ABE6",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  fileButtonText: {
-    color: "#FFF",
-    fontWeight: "bold",
   },
   textInput: {
     borderWidth: 1,
