@@ -86,7 +86,7 @@ const ReviewMhs = () => {
               </Picker>
             </View>
 
-            <Text style={styles.modalLabel}>Nama File</Text>
+            <Text style={styles.modalLabel}>Nama subject</Text>
             <TextInput 
               style={styles.textInput} 
               placeholder="Masukkan nama file" 
