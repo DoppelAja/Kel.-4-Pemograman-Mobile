@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TextInput, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TextInput } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import { db } from "./firebaseConfig"; // Pastikan path ini sesuai
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 const JanjiTemuMhs = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -10,11 +12,50 @@ const JanjiTemuMhs = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [janjiTemuList, setJanjiTemuList] = useState([]);
 
   const dosenList = [
     { id: "1", name: "Joko, S.Kom., M.T" },
     { id: "2", name: "Clara, S.Kom., M.Kom" },
   ];
+
+  const fetchJanjiTemu = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "janjiTemu"));
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setJanjiTemuList(data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (selectedDosen && date && time) {
+      const formattedDate = date.toLocaleDateString();
+      const formattedTime = time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      try {
+        await addDoc(collection(db, "janjiTemu"), {
+          dosen: selectedDosen,
+          date: formattedDate,
+          time: formattedTime,
+        });
+        fetchJanjiTemu(); // Refresh data
+        setModalVisible(false);
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
+    } else {
+      alert("Mohon lengkapi semua field!");
+    }
+  };
+
+  useEffect(() => {
+    fetchJanjiTemu();
+  }, []);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -63,57 +104,31 @@ const JanjiTemuMhs = () => {
           </View>
         </View>
 
-        {/* Janji Temu */}
+        <Text style={styles.subtitle}>Tentukan Janji Temu anda dengan dosen pembimbing pilihan</Text>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Daftar Janji Temu</Text>
-
-          <View style={styles.appointmentRow}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>24</Text>
-              <Text style={styles.month}>April</Text>
-              <Text style={styles.year}>2024</Text>
-            </View>
-
-            <View style={styles.appointmentCard}>
-              <View style={styles.appointmentDetails}>
-                <Text style={styles.lecturerName}>Joko, S.Kom., M.T</Text>
-                <Text style={styles.appointmentLabel}>Janji Temu</Text>
-                <Text style={styles.appointmentText}>Janji temu untuk menyelesaikan progress skripsi</Text>
+          {janjiTemuList.map((item) => (
+            <View style={styles.appointmentRow} key={item.id}>
+              <View style={styles.dateContainer}>
+                <Text style={styles.date}>{item.date.split("/")[0]}</Text>
+                <Text style={styles.month}>{item.date.split("/")[1]}</Text>
+                <Text style={styles.year}>{item.date.split("/")[2]}</Text>
+              </View>
+              <View style={styles.appointmentCard}>
+                <Text style={styles.lecturerName}>{item.dosen}</Text>
+                <Text style={styles.appointmentText}>{`${item.date}, ${item.time}`}</Text>
               </View>
             </View>
-          </View>
-
-          <View style={styles.appointmentRow}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>30</Text>
-              <Text style={styles.month}>April</Text>
-              <Text style={styles.year}>2024</Text>
-            </View>
-
-            <View style={styles.appointmentCard}>
-              <View style={styles.appointmentDetails}>
-                <Text style={styles.lecturerName}>Clara, S.Kom., M.Kom</Text>
-                <Text style={styles.appointmentLabel}>Janji Temu</Text>
-                <Text style={styles.appointmentText}>Janji temu untuk menyelesaikan progress skripsi BAB II</Text>
-              </View>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
-      <Image source={require("./assets/Lingkaran.png")} style={styles.stickyCircle} />
 
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
- 
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButtonContainer}>
-              <Image source={require("./assets/CloseButton.png")} style={styles.closeButton} />
-            </TouchableOpacity>
-
             <Text style={styles.modalTitle}>Ajukan Janji Temu</Text>
-
             <Text style={styles.inputLabel}>Pilih Dosen</Text>
-            <Picker selectedValue={selectedDosen} onValueChange={(itemValue) => setSelectedDosen(itemValue)} style={styles.picker}>
+            <Picker selectedValue={selectedDosen} onValueChange={(value) => setSelectedDosen(value)} style={styles.picker}>
               <Picker.Item label="Pilih Dosen" value="" />
               {dosenList.map((dosen) => (
                 <Picker.Item key={dosen.id} label={dosen.name} value={dosen.name} />
@@ -132,21 +147,9 @@ const JanjiTemuMhs = () => {
             </TouchableOpacity>
             {showTimePicker && <DateTimePicker value={time} mode="time" display="default" onChange={onChangeTime} />}
 
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.submitButton]}
-                onPress={() => {
-                  console.log("Form submitted with:", {
-                    dosen: selectedDosen,
-                    date: date.toLocaleDateString(),
-                    time: time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-                  });
-                  setModalVisible(false);
-                }}
-              >
-                <Text style={styles.submitButtonText}>Kirim</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Kirim</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -251,7 +254,7 @@ const styles = StyleSheet.create({
   },
   appointmentRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "stretch", // Pastikan semua elemen dalam baris memiliki tinggi sama
     marginBottom: 20,
   },
   dateContainer: {
@@ -262,7 +265,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#3470A2",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignSelf: "stretch",
     shadowColor: "black",
     shadowOpacity: 0.8,
     elevation: 6,
@@ -276,12 +278,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     padding: 10,
     justifyContent: "center",
+    alignSelf: "stretch",
     shadowColor: "black",
     shadowOpacity: 0.8,
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 13 },
   },
+
   appointmentDetails: {
     flex: 1,
   },
