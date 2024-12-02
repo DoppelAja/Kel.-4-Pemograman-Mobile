@@ -126,6 +126,12 @@ const JanjiTemuMhs = () => {
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.closeButtonContainer} onPress={() => setModalVisible(false)}>
+              <Image
+                source={require("./assets/CloseButton.png")}
+                style={styles.closeButton}
+              />
+            </TouchableOpacity>
             <Text style={styles.modalTitle}>Ajukan Janji Temu</Text>
             <Text style={styles.inputLabel}>Pilih Dosen</Text>
             <Picker selectedValue={selectedDosen} onValueChange={(value) => setSelectedDosen(value)} style={styles.picker}>
