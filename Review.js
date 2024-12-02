@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ImageBackground, SafeAreaView } from 'react-native';
 
 const ReviewScreen = () => {
   const reviews = [
@@ -24,57 +24,68 @@ const ReviewScreen = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Review</Text>
-      <Text style={styles.subtitle}>
-        Beritahu dosenmu jika kamu ingin mensubmit review progress skripsimu
-      </Text>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('./assets/BackBimbingan.png')} resizeMode="cover" style={styles.backgroundImage}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Review</Text>
+          <Text style={styles.subtitle}>
+            Beritahu dosenmu jika kamu ingin mensubmit review progress skripsimu
+          </Text>
 
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitButtonText}>Ajukan Review Baru</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.submitButton}>
+            <Text style={styles.submitButtonText}>Ajukan Review Baru</Text>
+          </TouchableOpacity>
 
-      <Text style={styles.sectionTitle}>Ajuan Review</Text>
+          <Text style={styles.sectionTitle}>Ajuan Review</Text>
 
-      <ScrollView>
-        {reviews.map((review) => (
-          <View
-            key={review.id}
-            style={[
-              styles.reviewCard,
-              review.status === "Disetujui" && styles.approvedBackground,
-              review.status === "Revisi" && styles.revisionBackground,
-              review.status === "Menunggu" && styles.pendingBackground,
-            ]}
-          >
-            <Text style={[
-                styles.reviewTitle, 
-                review.status === "Disetujui" && styles.approvedText,
-                review.status === "Revisi" && styles.revisionText,
-                review.status === "Menunggu" && styles.pendingText
-            ]}>Hasil Review</Text>
-            <Text style={styles.reviewer}>{review.reviewer}</Text>
-            <Text style={styles.message}>{review.message}</Text>
-            <View style={styles.statusBadge}>
-              <Text style={[
-                  styles.statusText,
-                  review.status === "Disetujui" && styles.approvedText,
-                  review.status === "Revisi" && styles.revisionText,
-                  review.status === "Menunggu" && styles.pendingText
-              ]}>{review.status}</Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-    </View>
+          <ScrollView>
+            {reviews.map((review) => (
+              <View
+                key={review.id}
+                style={[
+                  styles.reviewCard,
+                  review.status === "Disetujui" && styles.approvedBackground,
+                  review.status === "Revisi" && styles.revisionBackground,
+                  review.status === "Menunggu" && styles.pendingBackground,
+                ]}
+              >
+                <Text style={[
+                    styles.reviewTitle, 
+                    review.status === "Disetujui" && styles.approvedText,
+                    review.status === "Revisi" && styles.revisionText,
+                    review.status === "Menunggu" && styles.pendingText
+                ]}>Hasil Review</Text>
+                <Text style={styles.reviewer}>{review.reviewer}</Text>
+                <Text style={styles.message}>{review.message}</Text>
+                <View style={styles.statusBadge}>
+                  <Text style={[
+                      styles.statusText,
+                      review.status === "Disetujui" && styles.approvedText,
+                      review.status === "Revisi" && styles.revisionText,
+                      review.status === "Menunggu" && styles.pendingText
+                  ]}>{review.status}</Text>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  content: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#F9F9F9', // Warna background utama
   },
   title: {
     fontSize: 24,
@@ -88,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 60,
   },
   submitButton: {
-    backgroundColor: '#4A90E2', // Warna biru tombol
+    backgroundColor: '#4A90E2',
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 20,
@@ -119,12 +130,12 @@ const styles = StyleSheet.create({
   },
   reviewer: {
     fontSize: 14,
-    color: '#fff', // Warna teks untuk nama reviewer
+    color: '#fff',
     marginBottom: 10,
   },
   message: {
     fontSize: 14,
-    color: '#fff', // Warna teks untuk pesan review
+    color: '#fff',
   },
   statusBadge: {
     position: 'absolute',
@@ -138,22 +149,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   approvedBackground: {
-    backgroundColor: '#4A90E2', // Background biru untuk disetujui
+    backgroundColor: '#4A90E2',
   },
   revisionBackground: {
-    backgroundColor: '#4A90E2', // Background biru untuk revisi
+    backgroundColor: '#4A90E2',
   },
   pendingBackground: {
     backgroundColor: '#4A90E2',
   },
   approvedText: {
-    color: '#56D288', // Warna hijau untuk teks disetujui
+    color: '#56D288',
   },
   revisionText: {
-    color: '#FF6EB4', // Warna merah muda untuk teks revisi
+    color: '#FF6EB4',
   },
   pendingText: {
-    color: '#FFDD57', // Warna kuning untuk teks menunggu
+    color: '#FFDD57',
   },
 });
 
