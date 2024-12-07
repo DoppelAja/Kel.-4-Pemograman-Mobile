@@ -1,91 +1,77 @@
-import React from "react";
-import { View, Text, ScrollView, Image, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebaseConfig";
 
 const NotifikasiDosen = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchNotifications = async () => {
+    try {
+      const janjiTemuSnapshot = await getDocs(collection(db, "janjiTemu"));
+      const janjiTemuData = janjiTemuSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        type: "Janji Temu",
+        ...doc.data(),
+      }));
+
+      const reviewsSnapshot = await getDocs(collection(db, "reviews"));
+      const reviewsData = reviewsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        type: "Review",
+        ...doc.data(),
+      }));
+
+      const allNotifications = [...janjiTemuData, ...reviewsData];
+      setNotifications(allNotifications);
+    } catch (error) {
+      console.error("Error fetching notifications: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container2}>
       <Text style={styles.subtitle}>Atur notifikasi yang ingin kamu terima disini</Text>
       <ScrollView style={styles.scrollContent}>
         <View style={styles.scrollView}>
-          <View style={styles.notificationContainerTitle}>
-            <View style={styles.textContainer}>
-              <Text style={styles.notificationTitle}>Ajuan Masuk</Text>
-              <Text style={styles.notificationTitle2}>Dari M. Fakhri Rizqullah</Text>
+          {notifications.map((item) => (
+            <View key={item.id}>
+              <View style={styles.notificationContainerTitle}>
+                <View>
+                  <Text style={styles.notificationTitle}>{item.type === "Janji Temu" ? "Ada Janji Temu Nih" : "Ajuan review"}</Text>
+                  <Text style={styles.notificationTitle2}>{item.type === "Janji Temu" ? `Dengan ${item.mahasiswa}` : `Dari ${item.mahasiswa}`}</Text>
+                </View>
+                <Image source={item.type === "Janji Temu" ? require("./assets/IkonNotif2.png") : require("./assets/IkonNotif.png")} style={styles.menuIconNotif} />
+              </View>
+              <View style={styles.notificationContainer}>
+                <View style={styles.notificationMessage}>
+                  {item.type === "Janji Temu" ? (
+                    <>
+                      <Text style={styles.notificationText}>{item.date}</Text>
+                      <Text style={styles.notificationText}>{item.time}</Text>
+                    </>
+                  ) : (
+                    <Text style={styles.notificationText}>{item.description}</Text>
+                  )}
+                </View>
+              </View>
             </View>
-            <Image source={require("./assets/IkonNotif.png")} style={styles.menuIconNotif} />
-          </View>
-          <View style={styles.notificationContainer}>
-            <View style={styles.notificationMessage}>
-              <Text style={styles.notificationText}>“Pak, berikut adalah ajuan dari skripsi saya pada bab III. mohon pak dikoreksi jika ada salah”</Text>
-            </View>
-          </View>
-
-          <View style={styles.notificationContainerTitle}>
-            <View>
-              <Text style={styles.notificationTitle}>Ada Janji Temu Nih</Text>
-              <Text style={styles.notificationTitle2}>Dengan Tsabina Robana</Text>
-            </View>
-            <Image source={require("./assets/IkonNotif2.png")} style={styles.menuIconNotif} />
-          </View>
-          <View style={styles.notificationContainer}>
-            <View style={styles.notificationMessage}>
-              <Text style={styles.notificationText}>24 April 2024</Text>
-              <Text style={styles.notificationText}>At 10:00 - 12:00 AM</Text>
-            </View>
-          </View>
-
-          <View style={styles.notificationContainerTitle}>
-            <View>
-              <Text style={styles.notificationTitle}>Ajuan Masuk</Text>
-              <Text style={styles.notificationTitle2}>Dari M. Fakhri Rizqullah</Text>
-            </View>
-            <Image source={require("./assets/IkonNotif.png")} style={styles.menuIconNotif} />
-          </View>
-          <View style={styles.notificationContainer}>
-            <View style={styles.notificationMessage}>
-              <Text style={styles.notificationText}>“Pak, berikut ajuan skripsi saya pada bagian IV, terima kasih sebelumnya pak”</Text>
-            </View>
-          </View>
-
-          <View style={styles.notificationContainerTitle}>
-            <View style={styles.textContainer}>
-              <Text style={styles.notificationTitle}>Review Masuk</Text>
-              <Text style={styles.notificationTitle2}>Dari M. Fakhri Rizqullah</Text>
-            </View>
-            <Image source={require("./assets/IkonNotif.png")} style={styles.menuIconNotif} />
-          </View>
-          <View style={styles.notificationContainer}>
-            <View style={styles.notificationMessage}>
-              <Text style={styles.notificationText}>“udah bagus untuk bab II nya tapi perbaiki lagi kata katanya menjadi baku dan bahasa indonesia”</Text>
-            </View>
-          </View>
-
-          <View style={styles.notificationContainerTitle}>
-            <View>
-              <Text style={styles.notificationTitle}>Ada Janji Temu Nih</Text>
-              <Text style={styles.notificationTitle2}>Dari M. Fakhri Rizqullah</Text>
-            </View>
-            <Image source={require("./assets/IkonNotif2.png")} style={styles.menuIconNotif} />
-          </View>
-          <View style={styles.notificationContainer}>
-            <View style={styles.notificationMessage}>
-              <Text style={styles.notificationText}>25 April 2024</Text>
-              <Text style={styles.notificationText}>At 10:00 - 12:00 AM</Text>
-            </View>
-          </View>
-
-          <View style={styles.notificationContainerTitle}>
-            <View>
-              <Text style={styles.notificationTitle}>Ajuan Masuk</Text>
-              <Text style={styles.notificationTitle2}>Dari M. Fakhri Rizqullah</Text>
-            </View>
-            <Image source={require("./assets/IkonNotif.png")} style={styles.menuIconNotif} />
-          </View>
-          <View style={styles.notificationContainer}>
-            <View style={styles.notificationMessage}>
-              <Text style={styles.notificationText}>”Pak, ini hasil skripsi saya, terima kasih sebelumnya”</Text>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -113,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 20,
-    backgroundColor: "#63ABE6",
+    backgroundColor: "#3470A2",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingVertical: 10,
@@ -151,6 +137,11 @@ const styles = StyleSheet.create({
   menuIconNotif: {
     width: 24,
     height: 24,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
