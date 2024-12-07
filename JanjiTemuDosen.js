@@ -1,25 +1,62 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, Image, Modal, TextInput } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TextInput, Switch } from "react-native";
+import { db } from "./firebaseConfig";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 
 const JanjiTemuDosen = () => {
-  const [isAvailable, setIsAvailable] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [janjiTemuList, setJanjiTemuList] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [newDate, setNewDate] = useState("");
+  const [newTime, setNewTime] = useState("");
+  const [isAvailable, setIsAvailable] = useState(false);
 
-  const toggleAvailability = () => setIsAvailable((previousState) => !previousState);
-
-  const openModal = () => setModalVisible(true);
-  const closeModal = () => {
-    setStartTime("");
-    setEndTime("");
-    setModalVisible(false);
+  const fetchJanjiTemu = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "janjiTemu"));
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setJanjiTemuList(data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
   };
 
-  const handleSubmit = () => {
-    console.log(`Jam Mulai: ${startTime}, Jam Berakhir: ${endTime}`);
-    closeModal();
+  const handleUpdate = async () => {
+    if (selectedAppointment && newDate && newTime) {
+      try {
+        const appointmentDoc = doc(db, "janjiTemu", selectedAppointment.id);
+        await updateDoc(appointmentDoc, {
+          date: newDate,
+          time: newTime,
+        });
+        fetchJanjiTemu();
+        setModalVisible(false);
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+    } else {
+      alert("Mohon lengkapi semua field!");
+    }
   };
+
+  const toggleAvailability = async (value) => {
+    setIsAvailable(value);
+    try {
+      const docRef = doc(db, "janjiTemu", "dosen");
+      await updateDoc(docRef, {
+        available: value,
+      });
+    } catch (error) {
+      console.error("Error updating availability: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchJanjiTemu();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -27,74 +64,41 @@ const JanjiTemuDosen = () => {
         <View style={styles.availabilityContainer}>
           <View style={styles.availabilityInfo}>
             <Text style={styles.subtitle}>Kesediaan Anda</Text>
-            <TouchableOpacity onPress={openModal}>
-              <Image source={require("./assets/IkonGear.png")} style={styles.settingsIcon} />
-            </TouchableOpacity>
+            <Switch trackColor={{ false: "#FB4646", true: "#9AE97F" }} thumbColor={isAvailable ? "#9AE97F" : "#FB4646"} onValueChange={toggleAvailability} value={isAvailable} />
           </View>
-
-          <Switch trackColor={{ false: "#FB4646", true: "#9AE97F" }} thumbColor={isAvailable ? "#9AE97F" : "#FB4646"} onValueChange={toggleAvailability} value={isAvailable} />
         </View>
 
         <Text style={styles.availabilityDescription}>Beritahu mahasiswa bersedia atau tidaknya Anda untuk melakukan bimbingan</Text>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Daftar Janji Temu</Text>
-
-          <View style={styles.appointmentRow}>
+        <Text style={styles.sectionTitle}>Daftar Janji Temu</Text>
+        {janjiTemuList.map((item) => (
+          <View style={styles.appointmentRow} key={item.id}>
             <View style={styles.dateContainer}>
-              <Text style={styles.date}>24</Text>
-              <Text style={styles.month}>April</Text>
-              <Text style={styles.year}>2024</Text>
+              <Text style={styles.date}>{item.date.split("/")[0]}</Text>
+              <Text style={styles.month}>{item.date.split("/")[1]}</Text>
+              <Text style={styles.year}>{item.date.split("/")[2]}</Text>
             </View>
-
             <View style={styles.appointmentCard}>
-              <View style={styles.appointmentDetails}>
-                <Text style={styles.lecturerName}>Dina Prikitiw</Text>
-                <Text style={styles.appointmentLabel}>Janji Temu</Text>
-                <Text style={styles.appointmentText}>Janji temu untuk menyelesaikan progress skripsi</Text>
-              </View>
+              <Text style={styles.lecturerName}>{item.mahasiswa}</Text>
+              <Text style={styles.appointmentText}>{`${item.date}, ${item.time}`}</Text>
             </View>
           </View>
-
-          <View style={styles.appointmentRow}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>30</Text>
-              <Text style={styles.month}>April</Text>
-              <Text style={styles.year}>2024</Text>
-            </View>
-
-            <View style={styles.appointmentCard}>
-              <View style={styles.appointmentDetails}>
-                <Text style={styles.lecturerName}>Siti Aqila</Text>
-                <Text style={styles.appointmentLabel}>Janji Temu</Text>
-                <Text style={styles.appointmentText}>Janji temu untuk menyelesaikan progress skripsi BAB II</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+        ))}
       </ScrollView>
 
-      <Image source={require("./assets/Lingkaran.png")} style={styles.stickyCircle} />
-
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
-        <View style={styles.modalBackground}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Atur Kesediaan Anda</Text>
-
-            <View style={styles.timeContainer}>
-              <View style={styles.timeInputContainer}>
-                <Text style={styles.modalDescription}>Jam Mulai</Text>
-                <TextInput style={styles.timeInput} placeholder="HH:MM" value={startTime} onChangeText={setStartTime} keyboardType="numeric" />
-              </View>
-
-              <View style={styles.timeInputContainer}>
-                <Text style={styles.modalDescription}>Jam Berakhir</Text>
-                <TextInput style={styles.timeInput} placeholder="HH:MM" value={endTime} onChangeText={setEndTime} keyboardType="numeric" />
-              </View>
-            </View>
-
-            <TouchableOpacity style={styles.closeButton} onPress={handleSubmit}>
-              <Text style={styles.closeButtonText}>Atur Jadwal</Text>
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.closeButtonContainer} onPress={() => setModalVisible(false)}>
+              <Image source={require("./assets/CloseButton.png")} style={styles.closeButton} />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Ubah Janji Temu</Text>
+            <Text style={styles.inputLabel}>Tanggal Baru</Text>
+            <TextInput style={styles.input} value={newDate} onChangeText={setNewDate} placeholder="DD/MM/YYYY" />
+            <Text style={styles.inputLabel}>Jam Baru</Text>
+            <TextInput style={styles.input} value={newTime} onChangeText={setNewTime} placeholder="HH:MM" />
+            <TouchableOpacity style={styles.submitButton} onPress={handleUpdate}>
+              <Text style={styles.submitButtonText}>Simpan</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -106,8 +110,8 @@ const JanjiTemuDosen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
+    paddingHorizontal: 20,
   },
   availabilityContainer: {
     flexDirection: "row",
@@ -124,26 +128,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: 5,
   },
-  settingsIcon: {
-    width: 24,
-    height: 24,
-  },
   availabilityDescription: {
     fontSize: 14,
     color: "#7B7B7B",
     marginTop: 5,
   },
-  section: {
-    marginTop: 20,
-  },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginVertical: 10,
   },
   appointmentRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "stretch",
     marginBottom: 20,
   },
   dateContainer: {
@@ -154,7 +151,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#3470A2",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignSelf: "stretch",
     shadowColor: "black",
     shadowOpacity: 0.8,
     elevation: 6,
@@ -168,28 +164,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     padding: 10,
     justifyContent: "center",
+    alignSelf: "stretch",
     shadowColor: "black",
     shadowOpacity: 0.8,
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 13 },
-  },
-  appointmentDetails: {
-    flex: 1,
-  },
-  lecturerName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#3470A2",
-  },
-  appointmentLabel: {
-    fontSize: 14,
-    color: "#A8A8A8",
-    marginBottom: 5,
-  },
-  appointmentText: {
-    fontSize: 14,
-    color: "#555",
   },
   date: {
     fontSize: 24,
@@ -203,76 +183,6 @@ const styles = StyleSheet.create({
   year: {
     fontSize: 14,
     color: "#fff",
-  },
-  stickyCircle: {
-    position: "absolute",
-    bottom: -50,
-    right: -50,
-    width: 250,
-    height: 250,
-    resizeMode: "contain",
-    zIndex: -1,
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalView: {
-    width: "80%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "#3470A2",
-  },
-  modalDescription: {
-    fontSize: 16,
-    marginBottom: 5,
-    textAlign: "center",
-  },
-  timeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 15,
-  },
-  timeInputContainer: {
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  timeInput: {
-    height: 40,
-    borderColor: "#cccccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    width: "100%",
-  },
-  closeButton: {
-    backgroundColor: "#3470A2",
-    borderRadius: 10,
-    padding: 10,
-    alignItems: "center",
-    width: "100%",
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
 });
 
