@@ -1,32 +1,25 @@
-import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Modal, TextInput } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, TextInput, Image } from "react-native";
+import { db } from "./firebaseConfig";
+import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
 
 const ReviewDosen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [response, setResponse] = useState("");
+  const [reviews, setReviews] = useState([]);
 
-  const reviews = [
-    {
-      id: 1,
-      reviewed: "M Fakhri Rizqullah",
-      message: "Berikut bab I saya pak, mohon bimbingannya apakah sudah sesuai atau belum",
-      status: "Menunggu",
-      date: "2024-10-10",
-      fileName: "Bab II M. Fakhri Rizqullah.pdf",
-    },
-    {
-      id: 2,
-      reviewed: "Joko, S.Kom., M.T",
-      message: "Skripsimu sudah tepat sekali, menyala abangkuh!!!",
-      status: "Disetujui",
-    },
-    {
-      id: 3,
-      reviewed: "Marconah Saputri",
-      message: "Plagiasinya 100%, semuanya ngutip dari web tribun sumsel ya nak?",
-      status: "Revisi",
-    },
-  ];
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "reviews"), (snapshot) => {
+      const fetchedReviews = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setReviews(fetchedReviews);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const openModal = (review) => {
     setSelectedReview(review);
@@ -36,6 +29,18 @@ const ReviewDosen = () => {
   const closeModal = () => {
     setModalVisible(false);
     setSelectedReview(null);
+    setResponse("");
+  };
+
+  const submitResponse = async () => {
+    if (response) {
+      const reviewRef = doc(db, "reviews", selectedReview.id);
+      await updateDoc(reviewRef, {
+        status: "Disetujui",
+        response: response,
+      });
+      closeModal();
+    }
   };
 
   return (
@@ -43,14 +48,14 @@ const ReviewDosen = () => {
       <Text style={styles.subtitle}>Periksa ajuan review dari mahasiswa bimbingan</Text>
 
       <Text style={styles.sectionTitle}>Ajuan Review</Text>
-
       <ScrollView>
         {reviews.map((review) => (
-          <TouchableOpacity key={review.id} onPress={review.status === "Menunggu" ? () => openModal(review) : null}>
+          <TouchableOpacity key={review.id} onPress={() => openModal(review)} disabled={review.status !== "Menunggu"}>
             <View style={[styles.reviewCard, review.status === "Menunggu" && styles.pendingBackground, (review.status === "Disetujui" || review.status === "Revisi") && styles.approvedBackground]}>
               <Text style={[styles.reviewTitle, (review.status === "Disetujui" || review.status === "Revisi") && styles.reviewedTextWhite]}>{review.status === "Menunggu" ? "Ajuan Review" : "Telah Review"}</Text>
-              <Text style={[styles.reviewed, (review.status === "Disetujui" || review.status === "Revisi") && styles.reviewedTextWhite]}>{review.reviewed}</Text>
-              <Text style={[styles.message, (review.status === "Disetujui" || review.status === "Revisi") && styles.reviewedTextWhite]}>{review.message}</Text>
+              <Text style={[styles.reviewer, (review.status === "Disetujui" || review.status === "Revisi") && styles.reviewedTextWhite]}>{review.mahasiswa}</Text>
+              <Text style={[styles.reviewer, (review.status === "Disetujui" || review.status === "Revisi") && styles.reviewedTextWhite]}>Kepada: {review.reviewer}</Text>
+              <Text style={[styles.message, (review.status === "Disetujui" || review.status === "Revisi") && styles.reviewedTextWhite]}>{review.description}</Text>
               <View style={styles.statusBadge}>
                 <Text style={[styles.statusText, review.status === "Disetujui" && styles.approvedText, review.status === "Revisi" && styles.revisionText, review.status === "Menunggu" && styles.pendingText]}>{review.status}</Text>
               </View>
@@ -58,36 +63,29 @@ const ReviewDosen = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <Image source={require("./assets/Lingkaran.png")} style={styles.stickyCircle} />
 
-      {selectedReview && (
-        <Modal visible={isModalVisible} transparent={true} animationType="slide">
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Ajuan Review</Text>
+      <Modal visible={isModalVisible} transparent={true} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Ajuan Review</Text>
 
-                <TouchableOpacity style={styles.closeButtonIcon} onPress={closeModal}>
-                  <Image source={require("./assets/CloseButton.png")} style={styles.closeImage} />
-                </TouchableOpacity>
-              </View>
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+              <Image source={require("./assets/CloseButton.png")} style={styles.closeButtonImage} />
+            </TouchableOpacity>
 
-              <Text style={styles.reviewed}>{selectedReview.reviewed}</Text>
-              <Text style={styles.message}>{selectedReview.message}</Text>
-              <Text style={styles.date}>Tanggal: {selectedReview.date}</Text>
-              <View style={styles.fileContainer}>
-                <Image source={require("./assets/IkonDownload.png")} style={styles.fileIcon} />
-                <Text style={styles.fileName}>{selectedReview.fileName}</Text>
-              </View>
-              <Text style={styles.modalLabel}>Tanggapan Anda:</Text>
-              <TextInput style={styles.responseInput} placeholder="Tulis tanggapan Anda di sini" multiline />
-              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                <Text style={styles.closeButtonText}>Kirim</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.reviewer}> {selectedReview?.reviewer}</Text>
+            <Text style={styles.subject}>{selectedReview?.subject}</Text>
+            <Text style={styles.message}>{selectedReview?.description}</Text>
+
+            <Text style={styles.modalLabel}>Tanggapan Anda:</Text>
+            <TextInput style={styles.responseInput} placeholder="Tulis tanggapan Anda di sini" value={response} onChangeText={setResponse} multiline />
+
+            <TouchableOpacity style={styles.submitButton} onPress={submitResponse}>
+              <Text style={styles.submitButtonText}>Kirim Tanggapan</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
-      )}
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -129,7 +127,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: "#515151",
   },
-  reviewed: {
+  reviewer: {
+    fontSize: 14,
+    color: "#515151",
+    marginBottom: 10,
+  },
+  subject: {
     fontSize: 14,
     color: "#515151",
     marginBottom: 10,
@@ -137,9 +140,6 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 14,
     color: "#515151",
-  },
-  reviewedTextWhite: {
-    color: "#FFF",
   },
   statusBadge: {
     position: "absolute",
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
   },
   approvedBackground: {
-    backgroundColor: "#63ABE6",
+    backgroundColor: "#fff",
   },
   pendingBackground: {
     backgroundColor: "#FFF",
@@ -178,15 +178,6 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 10,
   },
-  stickyCircle: {
-    position: "absolute",
-    bottom: -50,
-    right: -50,
-    width: 250,
-    height: 250,
-    resizeMode: "contain",
-    zIndex: -1,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -204,37 +195,12 @@ const styles = StyleSheet.create({
     color: "#63ABE6",
     fontSize: 20,
     fontWeight: "bold",
+    paddingBottom: 20,
   },
-  date: {
-    fontSize: 14,
-    color: "#515151",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  fileContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  fileIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  fileName: {
-    fontSize: 14,
-    color: "#515151",
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-
   modalLabel: {
     fontSize: 16,
     fontWeight: "bold",
+    marginTop: 10,
     marginBottom: 10,
   },
   responseInput: {
@@ -246,23 +212,25 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginBottom: 20,
   },
-  closeButton: {
+  submitButton: {
     backgroundColor: "#63ABE6",
     paddingVertical: 10,
     borderRadius: 10,
     alignItems: "center",
   },
-  closeButtonText: {
+  submitButtonText: {
     color: "#FFF",
     fontWeight: "bold",
   },
-  closeButtonIcon: {
-    alignItems: "flex-end",
-    marginBottom: 10,
+  closeButton: {
+    position: "absolute",
+    top: 15,
+    right: 20,
   },
-  closeImage: {
-    width: 25,
-    height: 25,
+  closeButtonImage: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
   },
 });
 
