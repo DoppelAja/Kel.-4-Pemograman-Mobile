@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TextInput } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
-import { db } from "./firebaseConfig"; // Pastikan path ini sesuai
+import { db } from "./firebaseConfig";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 
 const JanjiTemuMhs = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [namaMahasiswa, setNamaMahasiswa] = useState("");
   const [selectedDosen, setSelectedDosen] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -33,18 +34,21 @@ const JanjiTemuMhs = () => {
   };
 
   const handleSubmit = async () => {
-    if (selectedDosen && date && time) {
+    if (namaMahasiswa && selectedDosen && date && time) {
       const formattedDate = date.toLocaleDateString();
       const formattedTime = time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
       try {
         await addDoc(collection(db, "janjiTemu"), {
+          mahasiswa: namaMahasiswa,
           dosen: selectedDosen,
           date: formattedDate,
           time: formattedTime,
         });
-        fetchJanjiTemu(); // Refresh data
+        fetchJanjiTemu();
         setModalVisible(false);
+        setNamaMahasiswa("");
+        setSelectedDosen("");
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -80,7 +84,6 @@ const JanjiTemuMhs = () => {
             <Text style={styles.buttonText}>Buat Janji Temu</Text>
           </TouchableOpacity>
 
-          {/* Daftar dosen */}
           <View style={styles.card}>
             <Image source={require("./assets/Joko.png")} style={styles.image} />
             <View style={styles.cardContent}>
@@ -104,7 +107,6 @@ const JanjiTemuMhs = () => {
           </View>
         </View>
 
-        <Text style={styles.subtitle}>Tentukan Janji Temu anda dengan dosen pembimbing pilihan</Text>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Daftar Janji Temu</Text>
           {janjiTemuList.map((item) => (
@@ -127,12 +129,13 @@ const JanjiTemuMhs = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity style={styles.closeButtonContainer} onPress={() => setModalVisible(false)}>
-              <Image
-                source={require("./assets/CloseButton.png")}
-                style={styles.closeButton}
-              />
+              <Image source={require("./assets/CloseButton.png")} style={styles.closeButton} />
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Ajukan Janji Temu</Text>
+
+            <Text style={styles.inputLabel}>Nama Mahasiswa</Text>
+            <TextInput value={namaMahasiswa} onChangeText={(text) => setNamaMahasiswa(text)} style={styles.input} placeholder="Masukkan Nama Mahasiswa" />
+
             <Text style={styles.inputLabel}>Pilih Dosen</Text>
             <Picker selectedValue={selectedDosen} onValueChange={(value) => setSelectedDosen(value)} style={styles.picker}>
               <Picker.Item label="Pilih Dosen" value="" />
@@ -260,7 +263,7 @@ const styles = StyleSheet.create({
   },
   appointmentRow: {
     flexDirection: "row",
-    alignItems: "stretch", // Pastikan semua elemen dalam baris memiliki tinggi sama
+    alignItems: "stretch",
     marginBottom: 20,
   },
   dateContainer: {
@@ -291,7 +294,6 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 13 },
   },
-
   appointmentDetails: {
     flex: 1,
   },
@@ -321,15 +323,6 @@ const styles = StyleSheet.create({
   year: {
     fontSize: 14,
     color: "#fff",
-  },
-  stickyCircle: {
-    position: "absolute",
-    bottom: -50,
-    right: -50,
-    width: 250,
-    height: 250,
-    resizeMode: "contain",
-    zIndex: -1,
   },
   modalContainer: {
     flex: 1,
@@ -375,12 +368,10 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginBottom: 10,
   },
-
   closeButton: {
     width: 30,
     height: 30,
   },
-
   submitButton: {
     backgroundColor: "#63ABE6",
     paddingVertical: 15,
